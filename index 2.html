@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#111827">
+<title>Mystery Love Island</title>
+<style>
+:root{--ink:#1b2430;--night:#101722;--wood:#6e4528;--wood2:#a8743d;--gold:#f4cb6a;--cream:#f5e7bd;--red:#b94c55;--green:#67a76c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0d141e}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff}button,input{font:inherit}button{touch-action:manipulation}
+#game{position:fixed;inset:0;overflow:hidden;background:#0d141e}.screen{position:absolute;inset:0;display:none;overflow:hidden}.screen.active{display:flex}.fade{animation:fade .45s ease both}@keyframes fade{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.btn{border:3px solid var(--gold);background:var(--wood);color:#fff;border-radius:10px;padding:12px 18px;min-height:50px;font-weight:900;text-transform:uppercase;box-shadow:0 4px 0 #382617}.btn:active{transform:translateY(3px);box-shadow:0 1px #382617}.secondary{background:#293747;border-color:#8da0b3}.center{align-items:center;justify-content:center;text-align:center;padding:22px}
+/* common */
+.panel{width:min(92vw,650px);background:linear-gradient(135deg,#81522c,#5d381f);border:4px solid #c69a5a;border-radius:15px;padding:20px;box-shadow:0 8px #0007}.panel h1,.panel h2{font-family:Georgia,serif}.gold{color:var(--gold);font-weight:900}.muted{color:#c9d2dc}.small{font-size:12px}.hidden{display:none!important}
+/* start */
+#start{flex-direction:column;background:radial-gradient(circle at 50% 34%,#2b3c51,#0e151f 68%)}.startChest{font-size:78px;filter:drop-shadow(0 0 18px #e7bd5c);animation:float 2.2s ease-in-out infinite}@keyframes float{50%{transform:translateY(-7px)}}#start h1{font-family:Georgia,serif;letter-spacing:2px;margin:10px 0 4px}.startSub{max-width:510px;line-height:1.5;color:#d8e0e7}
+/* intro */
+#intro{background:#6eaac4}.sky{position:absolute;inset:0 0 50%;background:linear-gradient(#78bdd6,#e2f0ef)}.sun{position:absolute;width:72px;height:72px;border-radius:50%;right:12%;top:8%;background:#ffe29a;box-shadow:0 0 35px #ffe29a99}.sea{position:absolute;inset:auto 0 0;height:48%;background:repeating-linear-gradient(180deg,#428eb6 0 14px,#4b98bf 14px 28px)}.wave{position:absolute;left:-10%;width:120%;height:8px;border-top:3px solid #fff8;border-radius:50%;animation:wave 3s linear infinite}.w1{bottom:34%}.w2{bottom:25%;animation-delay:-1s}.w3{bottom:16%;animation-delay:-2s}@keyframes wave{to{transform:translateX(7%)}}
+.sand{position:absolute;inset:auto 0 0;height:40%;background:linear-gradient(#e8d18e,#d3b56a)}.palm{position:absolute;font-size:68px;animation:sway 3s ease-in-out infinite;filter:drop-shadow(2px 3px 0 #3b3225aa)}.p1{left:3%;bottom:30%}.p2{right:4%;bottom:30%;animation-delay:-1.5s}@keyframes sway{50%{transform:rotate(2deg)}}
+.sprite{position:absolute;z-index:10;width:54px;height:76px;transition:left 1.25s cubic-bezier(.2,.8,.2,1),top 1.25s cubic-bezier(.2,.8,.2,1),bottom 1.25s cubic-bezier(.2,.8,.2,1)}.sprite svg{width:100%;height:100%;image-rendering:pixelated;shape-rendering:crispEdges}.idle{animation:idle 1.5s ease-in-out infinite}.walking .legA{animation:legA .32s steps(2,end) infinite}.walking .legB{animation:legB .32s steps(2,end) infinite}.walking .armA{animation:armA .32s steps(2,end) infinite}.walking .armB{animation:armB .32s steps(2,end) infinite}@keyframes idle{50%{transform:translateY(-2px)}}@keyframes legA{50%{transform:translate(2px,0)}}@keyframes legB{50%{transform:translate(-2px,0)}}@keyframes armA{50%{transform:translate(-2px,0)}}@keyframes armB{50%{transform:translate(2px,0)}}
+.dialog{position:absolute;z-index:30;left:6%;right:6%;bottom:7%;background:#182633;border:3px solid #d9b95f;border-radius:12px;padding:14px 48px 14px 15px;line-height:1.42;box-shadow:0 6px #0006}.next{position:absolute;right:8px;bottom:7px;border:0;background:none;color:#fff;font-size:30px}.bottle{position:absolute;z-index:8;font-size:42px;left:66%;bottom:22%;animation:glint 1.4s infinite alternate}@keyframes glint{to{filter:drop-shadow(0 0 11px white)}}
+#mapPaper{align-items:center;justify-content:center;background:linear-gradient(#6faac4 0 50%,#e4cd8b 50%)}.paper{width:min(90vw,480px);background:#ead39a;color:#392719;border:4px solid #9b713e;border-radius:7px;padding:22px;text-align:center;font-family:Georgia,serif;box-shadow:0 8px #0006;animation:paper .5s ease}@keyframes paper{from{opacity:0;transform:scale(.72) rotate(-5deg)}to{opacity:1;transform:none}}
+/* map */
+#map{flex-direction:column;padding:10px;background:#111a23}.mapTop{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 8px;font-weight:900}.counter{color:var(--gold)}.mapBox{position:relative;flex:1;min-height:0;overflow:hidden;border:3px solid #55745b;border-radius:16px;background:#428fb9}.world{position:absolute;inset:-15%;transition:transform 1s ease}.water{position:absolute;inset:0;background:linear-gradient(135deg,#2f83ad,#58a9c7 52%,#367fa8);overflow:hidden}.water:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(170deg,transparent 0 28px,#ffffff12 29px 31px);animation:water 4s linear infinite}@keyframes water{to{background-position:70px 0}}
+.island{position:absolute;inset:8% 7%;background:#76aa5b;border-radius:45% 55% 48% 52%/48% 44% 56% 52%;box-shadow:inset 0 0 0 12px #5f914f,inset -20px -16px 0 #6a9c53;overflow:hidden}.sandRim{position:absolute;inset:4%;border-radius:inherit;border:13px solid #e6cf8b;opacity:.9}.mountain{position:absolute;width:150px;height:95px;background:#59704e;clip-path:polygon(0 100%,50% 0,100% 100%);top:10%;right:10%}.mountain:after{content:"";position:absolute;left:35%;top:0;border-left:20px solid transparent;border-right:20px solid transparent;border-bottom:35px solid #eee;transform:rotate(0)}.forestPatch{position:absolute;width:150px;height:100px;background:radial-gradient(circle at 20% 50%,#356947 0 13%,transparent 14%),radial-gradient(circle at 45% 35%,#356947 0 13%,transparent 14%),radial-gradient(circle at 70% 55%,#356947 0 13%,transparent 14%),radial-gradient(circle at 90% 35%,#356947 0 13%,transparent 14%);top:38%;left:8%}.waterfall{position:absolute;right:29%;top:30%;width:22px;height:90px;background:repeating-linear-gradient(90deg,#c9eef2 0 4px,#8fd3df 4px 8px);border-radius:0 0 12px 12px;animation:fall .5s linear infinite}@keyframes fall{to{background-position:0 8px}}.ruins{position:absolute;left:61%;bottom:14%;font-size:46px;filter:saturate(.65)}.magicArea{position:absolute;right:8%;bottom:9%;width:130px;height:110px;border-radius:50%;background:radial-gradient(circle,#f7d77c77,#f7d77c00 68%);animation:magicPulse 2s ease-in-out infinite}@keyframes magicPulse{50%{transform:scale(1.08);opacity:.65}}
+.mapTitle{position:absolute;z-index:20;top:8px;left:50%;transform:translateX(-50%);background:#18222de8;border:2px solid #dcb55c;border-radius:9px;padding:6px 10px;font-size:12px;white-space:nowrap}.path{position:absolute;z-index:5;left:9%;top:67%;width:82%;height:7px;background:repeating-linear-gradient(90deg,#f6e3a7 0 11px,transparent 11px 19px);transform:rotate(-16deg);filter:drop-shadow(0 2px 1px #514a32)}
+.node{position:absolute;z-index:12;width:34px;height:34px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;background:#59636e;font-size:12px;font-weight:1000;box-shadow:0 3px #303841;transition:.3s}.node.active{background:var(--red);animation:pulse .75s alternate infinite}.node.done{background:var(--green)}@keyframes pulse{to{transform:scale(1.12)}}
+.n1{left:7%;top:70%}.n2{left:14%;top:64%}.n3{left:21%;top:58%}.n4{left:28%;top:52%}.n5{left:35%;top:46%}.n6{left:42%;top:40%}.n7{left:49%;top:34%}.n8{left:56%;top:29%}.n9{left:62%;top:25%}.n10{left:68%;top:21%}.n11{left:73%;top:27%}.n12{left:78%;top:34%}.n13{left:72%;top:41%}.n14{left:66%;top:48%}.n15{left:60%;top:55%}.n16{left:54%;top:62%}.n17{left:47%;top:68%}.n18{left:40%;top:73%}.n19{left:32%;top:76%}.n20{left:24%;top:79%}
+.mapHero{position:absolute;z-index:14;width:48px;height:68px;left:7%;top:64%;transition:left 1.25s cubic-bezier(.2,.8,.2,1),top 1.25s cubic-bezier(.2,.8,.2,1)}.mapHero svg{width:100%;height:100%;image-rendering:pixelated}.mapHint{text-align:center;font-size:12px;padding:6px;color:#cbd5df}
+/* question */
+#question,#final,#memories,#treasure{align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;background:radial-gradient(circle at 50% 35%,#314255,#101821)}.qPanel{width:min(92vw,650px);background:linear-gradient(135deg,#80502b,#5f391f);border:4px solid #c39754;border-radius:15px;padding:20px;box-shadow:0 8px #332117}.qPanel h2{font-family:Georgia,serif;margin:0 0 12px}.qText{font-size:20px;line-height:1.45;margin:10px 0 16px}.answer{width:100%;padding:14px;border-radius:10px;border:2px solid #c39754;background:#121a22;color:#fff;font-size:18px;outline:none}.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}.feedback{min-height:26px;font-weight:900}.good{color:#a9e9af}.bad{color:#ffaaa9}
+/* final */
+.bigChest{font-size:90px;filter:drop-shadow(0 0 22px #e7bd5c);animation:float 2s ease-in-out infinite}.memoryList{width:min(92vw,650px);max-height:62%;overflow:auto;text-align:left}.memory{padding:12px;margin:7px 0;background:#202b37;border:1px solid #697a8b;border-radius:10px}.memory b{color:var(--gold)}.treasureCard{background:#ead39a;color:#392719;border:4px solid #b98a48;border-radius:12px;padding:22px;max-width:560px;font-family:Georgia,serif;box-shadow:0 8px #392718}.spark{font-size:60px;animation:float 1.2s infinite}
+@media(max-height:620px){.dialog{bottom:4%;padding:10px 42px 10px 12px}.startChest{font-size:58px}}
+</style>
+</head>
+<body>
+<div id="game">
+<section id="start" class="screen active center fade">
+ <div class="startChest">🔐</div><h1>MYSTERY LOVE ISLAND</h1>
+ <p class="startSub">Une aventure mystérieuse commence.<br>Réunis toutes les clés pour découvrir le trésor à la valeur inestimable.</p>
+ <div class="gold">🗝️ 20 CLÉS NÉCESSAIRES</div><button class="btn" id="startBtn">Démarrer l'aventure</button>
+</section>
+<section id="intro" class="screen fade">
+ <div class="sky"></div><div class="sun"></div><div class="sea"><i class="wave w1"></i><i class="wave w2"></i><i class="wave w3"></i></div><div class="sand"></div><div class="palm p1">🌴</div><div class="palm p2">🌴</div>
+ <div id="introHero" class="sprite idle" style="left:42%;bottom:21%"></div><div id="introBottle" class="bottle hidden">🍾</div>
+ <div id="introDialog" class="dialog"><span id="introText">Mais qu'est-ce que je fais ici ?</span><button class="next" id="introNext">›</button></div>
+</section>
+<section id="mapPaper" class="screen fade"><div class="paper"><div style="font-size:60px">🗺️</div><h2>La carte au trésor</h2><p>Une île mystérieuse, un coffre verrouillé et un chemin semé d'énigmes...</p><button class="btn" id="mapContinue">Continuer</button></div></section>
+<section id="map" class="screen fade">
+ <div class="mapTop"><span>🏝️ MYSTERY LOVE ISLAND</span><span class="counter">🗝️ <b id="keyCount">0</b>/20</span></div>
+ <div class="mapBox"><div class="world" id="world"><div class="water"></div><div class="island"><div class="sandRim"></div><div class="mountain"></div><div class="forestPatch"></div><div class="waterfall"></div><div class="ruins">🏛️</div><div class="magicArea"></div></div><div class="mapTitle">LE CHEMIN DU TRÉSOR</div><div class="path"></div><div class="chest" id="mapChest">🔐</div>
+  <div class="node n1" data-i="0">1</div><div class="node n2" data-i="1">2</div><div class="node n3" data-i="2">3</div><div class="node n4" data-i="3">4</div><div class="node n5" data-i="4">5</div><div class="node n6" data-i="5">6</div><div class="node n7" data-i="6">7</div><div class="node n8" data-i="7">8</div><div class="node n9" data-i="8">9</div><div class="node n10" data-i="9">10</div><div class="node n11" data-i="10">11</div><div class="node n12" data-i="11">12</div><div class="node n13" data-i="12">13</div><div class="node n14" data-i="13">14</div><div class="node n15" data-i="14">15</div><div class="node n16" data-i="15">16</div><div class="node n17" data-i="16">17</div><div class="node n18" data-i="17">18</div><div class="node n19" data-i="18">19</div><div class="node n20" data-i="19">20</div>
+  <div id="mapHero" class="mapHero"></div>
+ </div></div>
+ <div class="mapHint" id="mapHint">Étape 1 : le premier mystère t'attend.</div><button class="btn" id="puzzleBtn">Énigme 1 →</button>
+</section>
+<section id="question" class="screen fade"><div class="qPanel"><h2 id="qTitle">ÉNIGME 1 / 20</h2><div class="qText" id="qText"></div><input id="answer" class="answer" autocomplete="off" placeholder="Ta réponse"><div class="actions"><button class="btn" id="validate">Valider</button><button class="btn secondary" id="hint">Découvrir la réponse</button></div><div id="feedback" class="feedback"></div></div></section>
+<section id="final" class="screen fade"><div class="bigChest">🔓</div><h1>LE COFFRE EST OUVERT</h1><p>Les 20 clés ont enfin ouvert le coffre...</p><button class="btn" id="memoriesBtn">Découvrir notre histoire</button></section>
+<section id="memories" class="screen fade"><h1>❤️ Les morceaux de notre histoire</h1><div class="memoryList" id="memoryList"></div><button class="btn" id="treasureBtn">💎 Découvrir ton trésor</button></section>
+<section id="treasure" class="screen fade"><div class="spark">💎</div><div class="treasureCard"><h1>Ton trésor t'attend...</h1><p>Tout ce voyage t'a menée jusqu'ici.</p><button class="btn" id="openTreasure">Découvrir ton trésor</button></div></section>
+</div>
+<script>
+(()=>{
+'use strict';
+const TREASURE_URL='https://alanmartinpresta-lang.github.io/Celena-app/?utm_source=chatgpt.com';
+const questions=[
+ {q:'Combien font 11 + 2 ?',a:'13',m:'Date de couple — 13/06/2018'},
+ {q:'Quel est le nom de la basilique située sur les hauteurs de Lyon ?',a:'Fourvière',m:'Premier rendez-vous'},
+ {q:'Quel chanteur britannique est notamment connu pour « Perfect » ?',a:'Ed Sheeran',m:'Chanteur préféré'},
+ {q:'De quel pays est originaire la poutine ?',a:'Canada',m:'Premier grand voyage'},
+ {q:'Combien font 8 − 2 ?',a:'6',m:'Date de couple — 13/06/2018'},
+ {q:'Quel dessert est préparé avec une base biscuitée et une garniture au fromage frais ?',a:'Cheesecake',m:'Dessert préféré'},
+ {q:'Comment s\'appelle la série dans laquelle on suit notamment Ross, Rachel, Monica, Chandler, Joey et Phoebe ?',a:'Friends',m:'Série préférée'},
+ {q:'Dans quel film un homme raconte-t-il leur histoire à une femme qui souffre d’Alzheimer ?',a:'N’oublie jamais',m:'Film romantique préféré'},
+ {q:'Combien font 20 − 1 ?',a:'19',m:'Naissance d’Iris — 19/02/2022'},
+ {q:'Qui interprète « Love Me Like You Do » ?',a:'Ellie Goulding',m:'Musique liée à la grossesse d’Ellie'},
+ {q:'Quelle ville française est célèbre pour son Festival international du cinéma ?',a:'Cannes',m:'Vacances d’été'},
+ {q:'Quel célèbre parc d’attractions Disney se trouve en France ?',a:'Disneyland',m:'Parc d’attraction préféré'},
+ {q:'Combien font 1 + 1 ?',a:'2',m:'Naissance d’Iris — 19/02/2022'},
+ {q:'Dans Desperate Housewives, quel surnom Susan donne-t-elle à Mike ?',a:'Petit pois',m:'Premier surnom'},
+ {q:'Quelle période de l’année est associée aux sapins, cadeaux et illuminations ?',a:'Noël',m:'Période préférée'},
+ {q:'Quel est le plus grand titre du groupe Goo Goo Dolls ?',a:'Iris',m:'Musique de la grossesse d’Iris'},
+ {q:'Combien font 1 + 2 ?',a:'3',m:'Naissance d’Ellie — 03/10/2025'},
+ {q:'En quelle année la France a-t-elle remporté la Coupe du monde ?',a:'2018',m:'Date de couple — 13/06/2018'},
+ {q:'Combien font 5 × 405 ?',a:'2025',m:'Naissance d’Ellie — 03/10/2025'},
+ {q:'Comment s’appelle le mari le plus incroyable de la Terre ?',a:'Alan',m:'Question finale ❤️'}
+];
+let current=0,keys=0,busy=false,introStep=0,audioStarted=false,audioCtx=null,ambient=null,musicTimer=null;
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const e=$(id);e.classList.add('active');e.classList.remove('fade');void e.offsetWidth;e.classList.add('fade')}
+function norm(s){return String(s??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,"'").replace(/\s+/g,' ')}
+function accepted(v,e){let x=norm(v),y=norm(e);if(x===y)return true;const a={"fourviere":["basilique de fourviere","notre dame de fourviere"],"cheesecake":["cheese cake"],"disneyland":["disneyland paris"],"n'oublie jamais":["the notebook"]};return (a[y]||[]).some(z=>x===norm(z))}
+/* Pixel-art character, embedded: no external image required. */
+const sprite=`<svg viewBox="0 0 32 44" aria-label="Celena pixel art"><g fill="#2b1d26"><rect x="11" y="2" width="10" height="4"/><rect x="8" y="6" width="16" height="11"/><rect x="10" y="17" width="12" height="10"/><rect x="8" y="27" width="7" height="13" class="legA"/><rect x="17" y="27" width="7" height="13" class="legB"/><rect x="5" y="17" width="5" height="12" class="armA"/><rect x="22" y="17" width="5" height="12" class="armB"/></g><g fill="#f0c6a5"><rect x="11" y="7" width="10" height="9"/><rect x="4" y="27" width="5" height="5"/><rect x="23" y="27" width="5" height="5"/></g><g fill="#6d3d2b"><rect x="8" y="4" width="16" height="5"/><rect x="9" y="8" width="4" height="8"/><rect x="19" y="8" width="5" height="8"/></g><g fill="#c95a74"><rect x="12" y="12" width="2" height="2"/><rect x="18" y="12" width="2" height="2"/></g><g fill="#f4c66b"><rect x="10" y="18" width="12" height="9"/></g><g fill="#40333b"><rect x="8" y="39" width="7" height="3"/><rect x="17" y="39" width="7" height="3"/></g></svg>`;
+$('introHero').innerHTML=sprite;$('mapHero').innerHTML=sprite;
+/* WebAudio: self-contained ambient synthesis. No external audio files are required. */
+function startAudio(){if(audioStarted)return;audioStarted=true;try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();ambient=audioCtx.createGain();ambient.gain.value=.16;ambient.connect(audioCtx.destination);startMusic();setAmbient('beach')}catch(e){}}
+function tone(freq,dur,when,vol=.035,type='sine'){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,when);g.gain.linearRampToValueAtTime(vol,when+.03);g.gain.exponentialRampToValueAtTime(.001,when+dur);o.connect(g);g.connect(ambient);o.start(when);o.stop(when+dur+.05)}
+function startMusic(){if(!audioCtx)return;const notes=[659,784,988,784,659,587,659,784,523,659,784,659];let i=0;musicTimer=setInterval(()=>{const t=audioCtx.currentTime;tone(notes[i%notes.length],.72,t,.025,'sine');i++},650)}
+let ambientNodes=[];
+function stopAmbient(){ambientNodes.forEach(n=>{try{n.stop()}catch(e){}});ambientNodes=[]}
+function noise(vol,filterFreq){if(!audioCtx)return;const len=audioCtx.sampleRate*2,buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*.55;const s=audioCtx.createBufferSource(),f=audioCtx.createBiquadFilter(),g=audioCtx.createGain();s.buffer=buf;s.loop=true;f.type='lowpass';f.frequency.value=filterFreq;g.gain.value=vol;s.connect(f);f.connect(g);g.connect(ambient);s.start();ambientNodes.push(s)}
+function setAmbient(kind){if(!audioCtx)return;stopAmbient();const map={beach:[.18,900],tropical:[.10,1600],forest:[.075,2400],mountain:[.07,650],waterfall:[.14,1800],sunset:[.055,900],night:[.045,1300],magic:[.025,3000]};const x=map[kind]||map.beach;noise(x[0],x[1]);if(kind==='waterfall')tone(120,.8,audioCtx.currentTime,.025,'sine');if(kind==='magic')tone(880,1,audioCtx.currentTime,.025,'sine')}
+function environmentFor(i){if(i<4)return'beach';if(i<8)return'tropical';if(i<12)return'forest';if(i<15)return i===14?'sunset':'waterfall';if(i<19)return'night';return'magic'}
+$('startBtn').onclick=()=>{startAudio();current=0;keys=0;introStep=0;$('introDialog').style.display='block';$('introText').textContent="Mais qu'est-ce que je fais ici ?";$('introBottle').classList.add('hidden');$('introHero').style.left='42%';$('introHero').style.bottom='21%';$('introHero').classList.add('idle');show('intro');setAmbient('beach')};
+$('introNext').onclick=()=>{if(introStep===0){introStep=1;$('introDialog').style.display='none';$('introBottle').classList.remove('hidden');$('introHero').classList.remove('idle');$('introHero').classList.add('walking');$('introHero').style.left='63%';setTimeout(()=>{$('introHero').classList.remove('walking');$('introDialog').style.display='block';$('introText').textContent="Une bouteille échouée... qu'est-ce qu'elle peut bien contenir ?"},1350)}else{$('introDialog').style.display='none';setTimeout(()=>show('mapPaper'),400)}};
+$('mapContinue').onclick=()=>{prepareMap();show('map');setAmbient('beach')};
+const pos=[[7,64],[14,58],[21,52],[28,46],[35,40],[42,34],[49,29],[56,25],[62,22],[68,18],[73,24],[78,31],[72,38],[66,45],[60,52],[54,59],[47,65],[40,70],[32,73],[24,76]];
+function prepareMap(){ $('keyCount').textContent=keys;$('puzzleBtn').textContent=`Énigme ${current+1} →`;$('mapHint').textContent=current?`Clé ${keys}/20 : le chemin continue vers l'étape ${current+1}.`:'Étape 1 : le premier mystère t’attend.';document.querySelectorAll('.node').forEach(n=>{let i=+n.dataset.i;n.classList.toggle('active',i===current);n.classList.toggle('done',i<current)});let p=pos[current];$('mapHero').style.left=p[0]+'%';$('mapHero').style.top=p[1]+'%';setAmbient(environmentFor(current))}
+$('puzzleBtn').onclick=()=>{loadQuestion();show('question');setTimeout(()=>$('answer').focus(),120)};
+function loadQuestion(){let x=questions[current];$('qTitle').textContent=`ÉNIGME ${current+1} / 20`;$('qText').textContent=x.q;$('answer').value='';$('feedback').textContent='';$('feedback').className='feedback'}
+$('validate').onclick=()=>{if(busy)return;let v=$('answer').value;if(!v.trim()){$('feedback').textContent='Écris une réponse avant de valider.';$('feedback').className='feedback bad';return}if(accepted(v,questions[current].a))winKey();else{$('feedback').textContent='❌ Pas tout à fait… Réessaie ou découvre la réponse.';$('feedback').className='feedback bad'}};
+$('answer').onkeydown=e=>{if(e.key==='Enter')$('validate').click()};
+$('hint').onclick=()=>{if(busy)return;$('feedback').textContent=`💡 La réponse était : ${questions[current].a}`;$('feedback').className='feedback good';setTimeout(winKey,700)};
+function winKey(){if(busy)return;busy=true;keys++;$('feedback').textContent=`🔑 Clé obtenue ! ${keys} / 20`;$('feedback').className='feedback good';tone(1047,.7,audioCtx?.currentTime||0,.08,'sine');setTimeout(()=>{if(keys===20){busy=false;setAmbient('magic');show('final');return}current++;busy=false;prepareMap();show('map')},950)}
+$('memoriesBtn').onclick=()=>{$('memoryList').innerHTML='';questions.forEach((x,i)=>{let d=document.createElement('div');d.className='memory';d.innerHTML=`<b>${i+1}. ${x.a}</b><br>${x.m}`;$('memoryList').appendChild(d)});show('memories')};
+$('treasureBtn').onclick=()=>show('treasure');$('openTreasure').onclick=()=>{window.location.href=TREASURE_URL};
+})();
+</script>
+</body>
+</html>
