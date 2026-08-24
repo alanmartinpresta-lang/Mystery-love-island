@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#101722">
+<title>Mystery Love Island</title>
+<style>
+:root{--gold:#f4ca68;--wood:#714724;--wood2:#a66f3d;--ink:#18212b;--paper:#f2dda9}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b1118}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff}
+button,input{font:inherit}button{touch-action:manipulation}
+#game{position:fixed;inset:0;overflow:hidden}
+.screen{position:absolute;inset:0;display:none}.screen.active{display:flex}.in{animation:in .42s ease both}
+@keyframes in{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.btn{border:3px solid var(--gold);background:var(--wood);color:#fff;border-radius:10px;padding:12px 18px;min-height:50px;font-weight:950;text-transform:uppercase;box-shadow:0 4px #382618}
+.btn:active{transform:translateY(3px);box-shadow:0 1px #382618}.secondary{background:#293747;border-color:#8595a7}
+.center{align-items:center;justify-content:center;text-align:center;padding:22px}
+#title{flex-direction:column;background:radial-gradient(circle at 50% 35%,#2c4056,#0c141d 68%)}
+#title h1{font:900 28px Georgia,serif;letter-spacing:2px;margin:10px 0 4px}
+.titleIcon{font-size:80px;filter:drop-shadow(0 0 22px #f4ca68aa);animation:float 2.1s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-7px)}}
+.copy{max-width:500px;line-height:1.5;color:#d9e1e8}.gold{color:var(--gold);font-weight:950}
+#scene{background:#5ca3c2}.sceneCanvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.dialog{position:absolute;z-index:20;left:5%;right:5%;bottom:5%;background:#172532eF;border:3px solid #d8b75e;border-radius:12px;padding:14px 48px 14px 15px;line-height:1.45;box-shadow:0 7px #0005}
+.dialog button{position:absolute;right:8px;bottom:6px;background:none;border:0;color:#fff;font-size:31px}
+.paper{width:min(90%,480px);background:var(--paper);color:#392718;border:4px solid #98703c;border-radius:8px;padding:22px;text-align:center;font-family:Georgia,serif;box-shadow:0 9px #0005}
+#paper{align-items:center;justify-content:center;background:linear-gradient(#72aec5 0 50%,#e2cb88 50%)}
+#map{flex-direction:column;padding:9px;background:#101922}
+.top{display:flex;justify-content:space-between;padding:2px 4px 8px;font-weight:950}.counter{color:var(--gold)}
+.mapBox{position:relative;flex:1;min-height:0;border:3px solid #55745c;border-radius:16px;overflow:hidden;background:#398db6}
+#mapCanvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.mapTitle{position:absolute;z-index:4;top:9px;left:50%;transform:translateX(-50%);background:#18222dea;border:2px solid #dcb55c;border-radius:9px;padding:6px 10px;font-size:12px;white-space:nowrap}
+.mapHint{text-align:center;padding:7px;font-size:12px;color:#cbd6df}
+#question,#final,#memories,#treasure{align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;background:radial-gradient(circle at 50% 35%,#334659,#0e151e)}
+.panel{width:min(100%,650px);background:linear-gradient(135deg,#80502b,#60391f);border:4px solid #c49755;border-radius:15px;padding:20px;box-shadow:0 8px #342218}
+.panel h2{font:900 20px Georgia,serif;margin:0 0 12px}.q{font-size:20px;line-height:1.45;margin-bottom:16px}
+.answer{width:100%;padding:14px;border-radius:10px;border:2px solid #c49755;background:#121a22;color:#fff;font-size:18px;outline:none}
+.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}.feedback{min-height:26px;margin-top:9px;font-weight:950}.good{color:#a9e8ae}.bad{color:#ffaaa9}
+.big{font-size:94px;filter:drop-shadow(0 0 25px #f4ca68);animation:float 2s infinite}
+.list{width:min(100%,650px);max-height:61%;overflow:auto;text-align:left}.memory{padding:12px;margin:7px 0;background:#202b37;border:1px solid #69798b;border-radius:10px}.memory b{color:var(--gold)}
+.treasureBox{background:var(--paper);color:#392718;border:4px solid #b98a48;border-radius:12px;padding:22px;max-width:560px;box-shadow:0 9px #392718}
+.spark{font-size:62px;animation:float 1.2s infinite}
+.hidden{display:none!important}
+@media(max-height:620px){#title h1{font-size:23px}.titleIcon{font-size:58px}.dialog{bottom:3%;padding:10px 43px 10px 12px}}
+</style>
+</head>
+<body>
+<div id="game">
+
+<section id="title" class="screen active center">
+ <div class="titleIcon">🔐</div>
+ <h1>MYSTERY LOVE ISLAND</h1>
+ <p class="copy">Une aventure mystérieuse t'attend.<br>Réunis toutes les clés pour découvrir le trésor à la valeur inestimable.</p>
+ <div style="margin:8px auto 14px;width:min(330px,82vw);padding:10px 12px;border:2px solid #9b3e43;border-radius:9px;background:#59616a99;color:#ff747b;font-weight:950;text-transform:uppercase">🔐 COFFRE VERROUILLÉ<br><span style="font-size:12px">NOMBRE DE CLÉS NÉCESSAIRES : 20</span></div>
+ <button class="btn" id="startBtn">Démarrer l'aventure</button>
+</section>
+
+<section id="scene" class="screen">
+ <canvas id="sceneCanvas" class="sceneCanvas"></canvas>
+ <div id="introDialog" class="dialog"><span id="introText">Mais qu'est-ce que je fais ici ?</span><button id="introNext">›</button></div>
+</section>
+
+<section id="paper" class="screen">
+ <div class="paper">
+  <div style="font-size:60px">🗺️</div>
+  <h2>Une carte au trésor</h2>
+  <p>« Trouve les 20 clés pour découvrir le trésor le plus inestimable. »</p>
+  <button class="btn" id="paperNext">Continuer</button>
+ </div>
+</section>
+
+<section id="map" class="screen">
+ <div class="top"><span>🏝️ MYSTERY LOVE ISLAND</span><span class="counter">🗝️ <b id="keyCount">0</b>/20</span></div>
+ <div class="mapBox">
+  <canvas id="mapCanvas"></canvas>
+  <div class="mapTitle">LE CHEMIN DU TRÉSOR</div>
+ </div>
+ <div id="mapHint" class="mapHint">Étape 1 : le premier mystère t'attend.</div>
+ <button class="btn" id="puzzleBtn">Énigme 1 →</button>
+</section>
+
+<section id="question" class="screen">
+ <div class="panel">
+  <h2 id="qTitle">ÉNIGME 1 / 20</h2><div id="qText" class="q"></div>
+  <input id="answer" class="answer" autocomplete="off" placeholder="Ta réponse">
+  <div class="actions"><button class="btn" id="validate">Valider</button><button class="btn secondary" id="reveal">Découvrir la réponse</button></div>
+  <div id="feedback" class="feedback"></div>
+ </div>
+</section>
+
+<section id="final" class="screen">
+ <div class="big">🔓</div><h1>LE COFFRE S'OUVRE</h1>
+ <p>Les 20 clés sont réunies.</p><button class="btn" id="memoriesBtn">Découvrir notre histoire</button>
+</section>
+
+<section id="memories" class="screen">
+ <h1>❤️ Les morceaux de notre histoire</h1><div id="memoryList" class="list"></div>
+ <button class="btn" id="treasureBtn">💎 Découvrir ton trésor</button>
+</section>
+
+<section id="treasure" class="screen">
+ <div class="spark">💎</div>
+ <div class="treasureBox"><h1>Ton trésor t'attend...</h1><p>Tu as trouvé toutes les clés.</p><button class="btn" id="openTreasure">Découvrir ton trésor</button></div>
+</section>
+
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   MYSTERY LOVE ISLAND — SINGLE FILE EDITION
+   Aucun fichier image, audio, CSS ou JS externe.
+   Tous les décors sont dessinés procéduralement dans Canvas.
+   Le son est généré avec WebAudio.
+============================================================ */
+
+const TREASURE_URL="https://alanmartinpresta-lang.github.io/Celena-app/?utm_source=chatgpt.com";
+
+const Q=[
+["Combien font 11 + 2 ?","13","Date de couple — 13/06/2018"],
+["Quel est le nom de la basilique située sur les hauteurs de Lyon ?","Fourvière","Premier rendez-vous"],
+["Quel chanteur britannique est notamment connu pour « Perfect » ?","Ed Sheeran","Chanteur préféré"],
+["De quel pays est originaire la poutine ?","Canada","Premier grand voyage"],
+["Combien font 8 − 2 ?","6","Date de couple — 13/06/2018"],
+["Quel dessert est préparé avec une base biscuitée et une garniture au fromage frais ?","Cheesecake","Dessert préféré"],
+["Comment s'appelle la série dans laquelle on suit notamment Ross, Rachel, Monica, Chandler, Joey et Phoebe ?","Friends","Série préférée"],
+["Dans quel film un homme raconte-t-il leur histoire à une femme qui souffre d’Alzheimer ?","N’oublie jamais","Film romantique préféré"],
+["Combien font 20 − 1 ?","19","Naissance d’Iris — 19/02/2022"],
+["Qui interprète « Love Me Like You Do » ?","Ellie Goulding","Musique liée à la grossesse d’Ellie"],
+["Quelle ville française est célèbre pour son Festival international du cinéma ?","Cannes","Vacances d’été"],
+["Quel célèbre parc d’attractions Disney se trouve en France ?","Disneyland","Parc d’attraction préféré"],
+["Combien font 1 + 1 ?","2","Naissance d’Iris — 19/02/2022"],
+["Dans Desperate Housewives, quel surnom Susan donne-t-elle à Mike ?","Petit pois","Premier surnom"],
+["Quelle période de l’année est associée aux sapins, cadeaux et illuminations ?","Noël","Période préférée"],
+["Quel est le plus grand titre du groupe Goo Goo Dolls ?","Iris","Musique de la grossesse d’Iris"],
+["Combien font 1 + 2 ?","3","Naissance d’Ellie — 03/10/2025"],
+["En quelle année la France a-t-elle remporté la Coupe du monde ?","2018","Date de couple — 13/06/2018"],
+["Combien font 5 × 405 ?","2025","Naissance d’Ellie — 03/10/2025"],
+["Comment s’appelle le mari le plus incroyable de la Terre ?","Alan","Question finale ❤️"]
+];
+
+const $=id=>document.getElementById(id);
+let current=0,keys=0,busy=false,intro=0;
+let W=0,H=0,raf=0,sceneMode="beach",sceneT=0,mapT=0;
+
+/* ---------- PIXEL-ART DRAWING ---------- */
+function resizeCanvas(c){
+ const d=devicePixelRatio||1;
+ const r=c.getBoundingClientRect();
+ c.width=Math.max(1,Math.floor(r.width*d));
+ c.height=Math.max(1,Math.floor(r.height*d));
+ const x=c.getContext("2d");x.setTransform(d,0,0,d,0,0);
+ return [r.width,r.height];
+}
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function pixelCircle(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(Math.round(x),Math.round(y),r,0,Math.PI*2);ctx.fill()}
+
+let ctx;
+function drawCharacter(c,x,y,scale=1,walking=false){
+ c.save();c.translate(x,y);c.scale(scale,scale);c.imageSmoothingEnabled=false;
+ // shadow
+ c.fillStyle="#26313b66";c.fillRect(-16,73,32,5);
+ // hair
+ c.fillStyle="#5b392d";c.fillRect(-17,0,34,13);c.fillRect(-20,8,8,25);c.fillRect(12,8,8,27);
+ // face
+ c.fillStyle="#f3c6a6";c.fillRect(-14,9,28,24);
+ c.fillStyle="#20252c";c.fillRect(-9,18,4,4);c.fillRect(5,18,4,4);
+ c.fillStyle="#b56d67";c.fillRect(-4,26,8,2);
+ // dress
+ c.fillStyle="#e9b9c4";c.fillRect(-20,32,40,28);c.fillStyle="#f4d3dc";c.fillRect(-11,32,22,8);
+ // arms
+ c.fillStyle="#f3c6a6";c.fillRect(-26,35,7,23);c.fillRect(19,35,7,23);
+ // legs
+ c.fillStyle="#4e5265";
+ let swing=walking?Math.sin(sceneT*.025)*4:0;
+ c.fillRect(-13+ swing,58,11,20);c.fillRect(2- swing,58,11,20);
+ c.fillStyle="#302d38";c.fillRect(-15+swing,76,15,5);c.fillRect(1-swing,76,15,5);
+ c.restore();
+}
+
+/* ---------- ENVIRONMENT ART ---------- */
+function environment(c,zone,t,w,h){
+ const grad=c.createLinearGradient(0,0,0,h);
+ if(zone==="night"||zone==="magic"){grad.addColorStop(0,"#111b36");grad.addColorStop(1,"#283d4b")}
+ else if(zone==="sunset"){grad.addColorStop(0,"#e89b76");grad.addColorStop(.5,"#f0c17d");grad.addColorStop(1,"#6f9e9e")}
+ else{grad.addColorStop(0,"#75b9d4");grad.addColorStop(1,"#dceecf")}
+ c.fillStyle=grad;c.fillRect(0,0,w,h);
+
+ // sun/moon
+ if(zone==="night"||zone==="magic"){
+  pixelCircle(w*.82,h*.13,28,"#f5e7b8");pixelCircle(w*.805,h*.12,28,"#17233b");
+  for(let i=0;i<45;i++){let sx=(i*83)%w,sy=(i*47)%Math.max(80,h*.55);pixelCircle(sx,sy,(i%3)+.6,"#fff8c9")}
+ }else{pixelCircle(w*.83,h*.12,34,zone==="sunset"?"#ffe0a0":"#ffe39b")}
+
+ if(zone==="beach"||zone==="tropical"){
+  // sea
+  c.fillStyle=zone==="beach"?"#3f91b8":"#4c9cba";c.fillRect(0,h*.54,w,h*.46);
+  c.fillStyle="#e6cf8a";c.fillRect(0,h*.77,w,h*.23);
+  for(let i=0;i<7;i++){let yy=h*(.59+i*.055)+Math.sin(t*.001+i)*3;c.strokeStyle="#ffffff66";c.lineWidth=2;c.beginPath();c.moveTo(-30,yy);c.quadraticCurveTo(w*.5,yy-7,w+30,yy);c.stroke()}
+  drawPalm(c,w*.12,h*.48,.95,t);drawPalm(c,w*.9,h*.49,.82,t);
+  if(zone==="tropical"){for(let i=0;i<12;i++){let bx=(i*97+t*.012)%w,by=h*.58+(i%5)*20;c.fillStyle="#6f9d55";c.fillRect(bx,by,8,16)}}
+ }else{
+  // land
+  c.fillStyle=zone==="mountain"?"#73857b":"#6ca65a";c.fillRect(0,h*.5,w,h*.5);
+  if(zone==="forest"){for(let i=0;i<14;i++)drawTree(c,(i*91)%w,h*.47-(i%3)*5,.65+(i%3)*.12)}
+  if(zone==="mountain"){drawMountain(c,w*.2,h*.54,w*.55,h*.48,"#586a70");drawMountain(c,w*.65,h*.55,w*.5,h*.43,"#65757a");for(let i=0;i<9;i++)drawPine(c,(i*83)%w,h*.67-(i%3)*8,.5+(i%3)*.1)}
+  if(zone==="waterfall"){drawTree(c,w*.12,h*.47,.9);drawTree(c,w*.85,h*.46,.8);c.fillStyle="#bde7ef";c.fillRect(w*.48,h*.38,w*.13,h*.44);c.fillStyle="#76bdd0";c.fillRect(w*.52,h*.38,w*.08,h*.44);c.fillStyle="#88c6d0";c.fillRect(w*.39,h*.79,w*.31,h*.12)}
+  if(zone==="sunset"){drawTree(c,w*.12,h*.47,.8);drawTree(c,w*.88,h*.46,.7)}
+  if(zone==="night"){for(let i=0;i<8;i++)drawTree(c,(i*137)%w,h*.46,.7)}
+  if(zone==="magic"){for(let i=0;i<8;i++){let x=(i*137+t*.008)%w,y=h*(.3+.07*(i%5))+Math.sin(t*.002+i)*12;pixelCircle(x,y,3+(i%2)*2,"#f4d879");pixelCircle(x,y,8,"#f4d87922")}drawTree(c,w*.13,h*.48,.8);drawTree(c,w*.87,h*.47,.8)}
+ }
+ // atmospheric particles
+ const count=zone==="magic"?28:(zone==="night"?12:7);
+ for(let i=0;i<count;i++){let px=(i*113+t*.006)%w,py=(i*61+t*.003)%h*.8;pixelCircle(px,py,zone==="magic"?2:1,"#fff6")}
+}
+function drawPalm(c,x,y,s,t){c.save();c.translate(x,y);c.scale(s,s);c.strokeStyle="#694d31";c.lineWidth=9;c.beginPath();c.moveTo(0,90);c.quadraticCurveTo(-5,45,3,0);c.stroke();for(let i=0;i<7;i++){c.strokeStyle="#3e7046";c.lineWidth=5;c.beginPath();c.moveTo(3,5);c.lineTo(Math.cos(i)*34,Math.sin(i)*18-8);c.stroke()}c.restore()}
+function drawTree(c,x,y,s){c.save();c.translate(x,y);c.scale(s,s);c.fillStyle="#6b452d";c.fillRect(-7,0,14,55);c.fillStyle="#315e42";pixelCircle(-18,-4,24,"#315e42");pixelCircle(17,-5,25,"#3a7046");pixelCircle(0,-25,28,"#447c4d");c.restore()}
+function drawPine(c,x,y,s){c.save();c.translate(x,y);c.scale(s,s);c.fillStyle="#5e4930";c.fillRect(-4,15,8,34);for(let i=0;i<4;i++){c.fillStyle="#315c43";c.beginPath();c.moveTo(0,-40+i*14);c.lineTo(-25+i*3,8+i*10);c.lineTo(25-i*3,8+i*10);c.closePath();c.fill()}c.restore()}
+function drawMountain(c,x,y,w,h,col){c.fillStyle=col;c.beginPath();c.moveTo(x-w/2,y);c.lineTo(x,y-h);c.lineTo(x+w/2,y);c.closePath();c.fill();c.fillStyle="#e7e8df";c.beginPath();c.moveTo(x,y-h);c.lineTo(x-w*.13,y-h*.62);c.lineTo(x+w*.13,y-h*.62);c.closePath();c.fill()}
+
+/* ---------- SCENE LOOP ---------- */
+function drawScene(){
+ const c=$("sceneCanvas"),r=c.getBoundingClientRect();W=r.width;H=r.height;ctx=c.getContext("2d");ctx.setTransform(devicePixelRatio||1,0,0,devicePixelRatio||1,0,0);ctx.imageSmoothingEnabled=false;
+ environment(ctx,sceneMode,sceneT,W,H);
+ // intro character and bottle
+ if(intro<2){
+  let cx=intro===0?W*.42:W*.62;
+  drawCharacter(ctx,cx,H*.62,Math.min(1.15,W/700),intro===1 && sceneT<1450);
+  if(intro===1){ctx.font="42px serif";ctx.fillText("🍾",W*.66,H*.68)}
+ }
+ sceneT+=16;raf=requestAnimationFrame(drawScene);
+}
+
+/* ---------- MAP ART ---------- */
+const positions=[[.07,.69],[.16,.62],[.25,.55],[.34,.48],[.43,.41],[.52,.34],[.61,.28],[.70,.22],[.79,.18],[.87,.25],[.77,.34],[.67,.43],[.57,.52],[.47,.60],[.37,.67],[.27,.73],[.37,.79],[.49,.75],[.62,.68],[.77,.59]];
+let mapFrom=0,mapTo=0,mapMoveStart=0,mapMoving=false;
+function beginMapMove(){
+ mapFrom=Math.max(0,current-1);mapTo=current;mapMoveStart=performance.now();mapMoving=true;
+}
+function easeMove(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}
+function drawMap(now=performance.now()){
+ const c=$("mapCanvas"),r=c.getBoundingClientRect(),w=r.width,h=r.height,d=devicePixelRatio||1;
+ c.width=Math.max(1,w*d);c.height=Math.max(1,h*d);c.setTransform(d,0,0,d,0,0);c.imageSmoothingEnabled=false;
+ c.fillStyle="#3d91b7";c.fillRect(0,0,w,h);
+ const islands=[[.22,.35,.31,.28],[.68,.31,.4,.34],[.49,.70,.48,.27],[.82,.73,.22,.2]];
+ islands.forEach((a,i)=>{c.fillStyle=i===3?"#e5cf8c":"#76ac62";c.beginPath();c.ellipse(w*a[0],h*a[1],w*a[2],h*a[3],0,0,Math.PI*2);c.fill()});
+ for(let i=0;i<22;i++){let x=(i*83)%w,y=(i*47)%h;c.fillStyle=i%2?"#3d754c":"#547f50";c.fillRect(x,y,6,9)}
+ c.strokeStyle="#f5dfa0";c.lineWidth=5;c.setLineDash([10,8]);c.beginPath();positions.forEach((p,i)=>i?c.lineTo(w*p[0],h*p[1]):c.moveTo(w*p[0],h*p[1]));c.stroke();c.setLineDash([]);
+ positions.forEach((p,i)=>{let x=w*p[0],y=h*p[1];c.fillStyle=i<current?"#5c9b64":i===current?"#bd5058":"#58626c";c.strokeStyle="#fff";c.lineWidth=3;c.beginPath();c.arc(x,y,19,0,Math.PI*2);c.fill();c.stroke();c.fillStyle="#fff";c.font="900 12px system-ui";c.textAlign="center";c.textBaseline="middle";c.fillText(i+1,x,y)});
+ c.font="46px serif";c.textAlign="left";c.fillText("🔐",w*.83,h*.12);
+ let progress=1;
+ if(mapMoving){progress=Math.min(1,(now-mapMoveStart)/1250);let e=easeMove(progress);let a=positions[mapFrom],b=positions[mapTo];let px=a[0]+(b[0]-a[0])*e,py=a[1]+(b[1]-a[1])*e;drawCharacter(c,w*px,h*py+32,.7,true);if(progress>=1)mapMoving=false}
+ else{let p=positions[current];drawCharacter(c,w*p[0],h*p[1]+32,.7,false)}
+ if(mapMoving)requestAnimationFrame(drawMap);
+}
+/* ---------- AUDIO ---------- */
+let audio=null,master=null,musicGain=null,ambGain=null,musicTimer=null,ambTimer=null,noiseNode=null;
+function audioInit(){
+ if(audio)return;
+ audio=new (window.AudioContext||window.webkitAudioContext)();
+ master=audio.createGain();master.gain.value=.38;master.connect(audio.destination);
+ musicGain=audio.createGain();musicGain.gain.value=.065;musicGain.connect(master);
+ ambGain=audio.createGain();ambGain.gain.value=.16;ambGain.connect(master);
+ const notes=[261.63,329.63,392,329.63,293.66,349.23,440,349.23];let n=0;
+ musicTimer=setInterval(()=>{const o=audio.createOscillator(),g=audio.createGain();o.type="sine";o.frequency.value=notes[n++%notes.length];g.gain.setValueAtTime(.0001,audio.currentTime);g.gain.exponentialRampToValueAtTime(.026,audio.currentTime+.025);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.54);o.connect(g);g.connect(musicGain);o.start();o.stop(audio.currentTime+.57)},650);
+ setAmb("beach");
+}
+function ping(freq,dur,gain=.04,type="sine"){if(!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;g.gain.value=.0001;g.gain.exponentialRampToValueAtTime(gain,audio.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.connect(g);g.connect(master);o.start();o.stop(audio.currentTime+dur+.03)}
+function sfx(k){if(k==="key"){ping(880,.14,.06);setTimeout(()=>ping(1174,.2,.05),120);setTimeout(()=>ping(1568,.3,.04),250)}else if(k==="good"){ping(523,.15,.05,"triangle");setTimeout(()=>ping(659,.2,.04,"triangle"),110)}else if(k==="bad"){ping(170,.18,.025,"sawtooth");setTimeout(()=>ping(120,.2,.02,"sawtooth"),120)}else if(k==="bottle"){ping(430,.08,.03,"triangle");setTimeout(()=>ping(650,.2,.025,"triangle"),90)}else if(k==="chest"){ping(220,.3,.05);setTimeout(()=>ping(440,.45,.045),300);setTimeout(()=>ping(880,.7,.04),700)}}
+function noiseBurst(duration=.6,volume=.018,filterType="lowpass",freq=900){
+ if(!audio)return;
+ const len=Math.floor(audio.sampleRate*duration),buf=audio.createBuffer(1,len,audio.sampleRate),data=buf.getChannelData(0);
+ for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/len,.25);
+ const src=audio.createBufferSource(),f=audio.createBiquadFilter(),g=audio.createGain();
+ src.buffer=buf;f.type=filterType;f.frequency.value=freq;g.gain.value=volume;src.connect(f);f.connect(g);g.connect(ambGain);src.start();
+}
+function setAmb(zone){
+ if(!audio)return;clearInterval(ambTimer);
+ const fn={
+  beach:()=>{noiseBurst(.9,.035,"lowpass",850);},
+  tropical:()=>{noiseBurst(.65,.018,"bandpass",1500);ping(1900,.08,.006);},
+  forest:()=>{noiseBurst(.35,.012,"highpass",2300);setTimeout(()=>ping(2300,.08,.009),90);},
+  mountain:()=>{noiseBurst(.9,.024,"lowpass",380);},
+  waterfall:()=>{noiseBurst(1.1,.042,"lowpass",1200);},
+  sunset:()=>{noiseBurst(.55,.012,"lowpass",700);},
+  night:()=>{ping(1500,.08,.004);ping(2100,.06,.003);},
+  magic:()=>{ping(880,.15,.006);ping(1320,.18,.005);noiseBurst(.35,.008,"highpass",2400);}
+ };
+ const f=fn[zone]||fn.beach;f();ambTimer=setInterval(f,900);
+}
+/* ---------- NAV ---------- */
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active","in"));const e=$(id);e.classList.add("active");void e.offsetWidth;e.classList.add("in")}
+function prepareMap(){
+ $("keyCount").textContent=keys;$("puzzleBtn").textContent=`Énigme ${current+1} →`;
+ $("mapHint").textContent=current?`Clé ${keys}/20 : avance vers l'étape ${current+1}.`:"Étape 1 : le premier mystère t'attend.";
+ if(!mapMoving)drawMap();
+}
+$("startBtn").onclick=()=>{audioInit();intro=0;sceneMode="beach";sceneT=0;cancelAnimationFrame(raf);$("introText").textContent="Mais qu'est-ce que je fais ici ?";show("scene");drawScene()};
+$("introNext").onclick=()=>{
+ if(intro===0){intro=1;$("introDialog").style.display="none";sceneT=0;setTimeout(()=>{$("introDialog").style.display="block";$("introText").textContent="Une bouteille échouée... qu'est-ce qu'elle peut bien contenir ?"},1450)}
+ else{sfx("bottle");$("introDialog").style.display="none";setTimeout(()=>show("paper"),400)}
+};
+$("paperNext").onclick=()=>{prepareMap();show("map")};
+$("puzzleBtn").onclick=()=>{loadQ();show("question");setTimeout(()=>$("answer").focus(),100)};
+
+/* ---------- QUESTIONS ---------- */
+function norm(s){return String(s??"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"'").replace(/\s+/g," ")}
+function ok(v,e){let a=norm(v),b=norm(e);if(a===b)return true;const al={"fourviere":["basilique de fourviere","notre dame de fourviere"],"cheesecake":["cheese cake"],"disneyland":["disneyland paris"],"n'oublie jamais":["the notebook"]};return(al[b]||[]).some(x=>a===norm(x))}
+function loadQ(){let x=Q[current];$("qTitle").textContent=`ÉNIGME ${current+1} / 20`;$("qText").textContent=x[0];$("answer").value="";$("feedback").textContent="";$("feedback").className="feedback"}
+function feedback(t,c){$("feedback").textContent=t;$("feedback").className="feedback "+c}
+$("validate").onclick=()=>{if(busy)return;let v=$("answer").value;if(!v.trim()){feedback("Écris une réponse avant de valider.","bad");return}if(ok(v,Q[current][1]))winKey();else{sfx("bad");feedback("❌ Pas tout à fait… Réessaie ou découvre la réponse.","bad")}};
+$("answer").onkeydown=e=>{if(e.key==="Enter")$("validate").click()};
+$("reveal").onclick=()=>{if(busy)return;feedback(`💡 La réponse était : ${Q[current][1]}`,"good");setTimeout(winKey,700)};
+function winKey(){if(busy)return;busy=true;keys++;sfx("key");feedback(`🗝️ Clé obtenue ! ${keys} / 20`,"good");setTimeout(()=>{if(keys===20){busy=false;sfx("chest");show("final");return}current++;busy=false;sceneMode=["beach","beach","tropical","tropical","forest","forest","forest","mountain","mountain","waterfall","waterfall","sunset","sunset","sunset","night","night","night","magic","magic","magic"][current];setAmb(sceneMode);prepareMap();show("map");beginMapMove();drawMap()},900)}
+
+/* ---------- END ---------- */
+$("memoriesBtn").onclick=()=>{let l=$("memoryList");l.innerHTML="";Q.forEach((x,i)=>{let d=document.createElement("div");d.className="memory";d.innerHTML=`<b>${i+1}. ${x[1]}</b><br>${x[2]}`;l.appendChild(d)});show("memories")};
+$("treasureBtn").onclick=()=>show("treasure");
+$("openTreasure").onclick=()=>location.href=TREASURE_URL;
+
+/* Initial responsive sizing and no scroll */
+addEventListener("resize",()=>{if($("scene").classList.contains("active"))drawScene();if($("map").classList.contains("active"))drawMap()});
+</script>
+</body>
+</html>
